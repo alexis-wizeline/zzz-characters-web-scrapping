@@ -7,7 +7,6 @@ require 'json'
 require_relative 'table_parser'
 require_relative 'lootbar_materials_scrapper'
 
-# Runner class to execute the scraping process
 class ScraperRunner
   URLS = [
     'https://lootbar.gg/blog/en/zenless-zone-zero-ye-shunguang-materials.html',
@@ -41,5 +40,4 @@ class ScraperRunner
   end
 end
 
-# Execute the runner if this file is run directly
 ScraperRunner.run if __FILE__ == $PROGRAM_NAME

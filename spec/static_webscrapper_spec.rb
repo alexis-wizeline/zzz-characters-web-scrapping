@@ -59,7 +59,6 @@ RSpec.describe LootbarMaterialsScraper do
 
   describe '#scrape' do
     it 'scrapes data correctly' do
-      # Mock the TABLES_INDEXES_SECTIONS to match our test HTML
       stub_const('LootbarMaterialsScraper::TABLES_INDEXES_SECTIONS', [0, 1])
 
       result = subject.scrape
@@ -78,7 +77,6 @@ RSpec.describe LootbarMaterialsScraper do
     it 'handles fetch errors gracefully' do
       stub_request(:get, url).to_return(status: 404)
 
-      # We need to suppress the warning output for cleaner test runs
       allow(subject).to receive(:warn)
 
       expect(subject.scrape).to eq({})
