@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rspec'
 require 'webmock/rspec'
-require_relative '../table_parser'
-require_relative '../lootbar_materials_scrapper'
+require_relative '../static_webscrapper'
 
 RSpec.describe TableParser do
   let(:table_html) do
@@ -34,7 +35,7 @@ RSpec.describe TableParser do
   end
 end
 
-RSpec.describe LootBarMaterialsScraper do
+RSpec.describe LootbarMaterialsScraper do
   let(:url) { 'https://example.com/materials' }
   subject { described_class.new(url) }
 
@@ -59,7 +60,7 @@ RSpec.describe LootBarMaterialsScraper do
   describe '#scrape' do
     it 'scrapes data correctly' do
       # Mock the TABLES_INDEXES_SECTIONS to match our test HTML
-      stub_const('LootBarMaterialsScraper::TABLES_INDEXES_SECTIONS', [0, 1])
+      stub_const('LootbarMaterialsScraper::TABLES_INDEXES_SECTIONS', [0, 1])
 
       result = subject.scrape
 
