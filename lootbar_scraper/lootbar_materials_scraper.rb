@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'lootbar_base_scraper'
-
+# lootbar web scrapper for ZZZ characters level up materials
 class LootbarMaterialsScraper < LootbarBaseScraper
   TABLES_INDEXES_SECTIONS = [0, 1, [2, 3], [4, 5, 6]].freeze
 

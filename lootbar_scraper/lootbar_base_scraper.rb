@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'nokogiri'
-
+# base lootbar web scraper
 class LootbarBaseScraper
   def initialize(url)
     @url = url

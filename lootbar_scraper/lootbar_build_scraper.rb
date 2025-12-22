@@ -2,6 +2,7 @@
 
 require_relative 'lootbar_base_scraper'
 
+# lootbar web scraper for ZZZ characters builds and teams
 class LootbarBuildScraper < LootbarBaseScraper
   attr_reader :character_builds
 
