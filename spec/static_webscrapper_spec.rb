@@ -2,7 +2,7 @@
 
 require 'rspec'
 require 'webmock/rspec'
-require_relative '../static_webscrapper'
+require_relative '../static_webscraper'
 
 RSpec.describe TableParser do
   let(:table_html) do

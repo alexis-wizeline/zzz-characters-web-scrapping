@@ -1,11 +1,14 @@
-class LootbarMaterialsScraper
+# frozen_string_literal: true
+
+require_relative 'lootbar_base_scraper'
+
+class LootbarMaterialsScraper < LootbarBaseScraper
   TABLES_INDEXES_SECTIONS = [0, 1, [2, 3], [4, 5, 6]].freeze
 
   attr_reader :character_materials
 
   def initialize(url)
-    @url = url
-    @doc = nil
+    super(url)
     @character_materials = {}
   end
 
@@ -19,25 +22,6 @@ class LootbarMaterialsScraper
   end
 
   private
-
-  def fetch_page
-    @doc = Nokogiri::HTML4(URI.open(@url))
-  rescue StandardError => e
-    warn "Failed to fetch #{@url}: #{e.message}"
-    nil
-  end
-
-  def page_title
-    @doc.title
-  end
-
-  def page_sub_titles
-    @doc.xpath('//h2')
-  end
-
-  def page_tables
-    @doc.xpath('//table')
-  end
 
   def process_sections
     tables = page_tables
