@@ -1,4 +1,4 @@
-### Web Scraper
+### ZZZ Characters Web Scraper
 
 This is a web scraper that scrapes the materials for a given character in the game Zenless Zone Zero.
 
