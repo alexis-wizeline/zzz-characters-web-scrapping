@@ -1,4 +1,5 @@
 .vscode/
+.DS_Store
 spec/scraped.json
 /scraped.json
 /.bundle
