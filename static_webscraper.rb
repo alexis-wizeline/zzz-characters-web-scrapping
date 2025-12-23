@@ -6,16 +6,18 @@ require 'json'
 
 require_relative 'table_parser'
 require_relative 'lootbar_scraper/lootbar_materials_scraper'
+require_relative 'lootbar_scraper/lootbar_builds_scraper'
 
 # The scraper runner
 class ScraperRunner
   URLS = [
-    'https://lootbar.gg/blog/en/zenless-zone-zero-ye-shunguang-materials.html',
-    'https://lootbar.gg/blog/en/zenless-zone-zero-dialyn-materials.html',
-    'https://lootbar.gg/blog/en/zenless-zone-zero-banyue-materials.html'
+    # 'https://lootbar.gg/blog/en/zenless-zone-zero-ye-shunguang-materials.html',
+    # 'https://lootbar.gg/blog/en/zenless-zone-zero-dialyn-materials.html',
+    # 'https://lootbar.gg/blog/en/zenless-zone-zero-banyue-materials.html'
+    'https://lootbar.gg/blog/en/zenless-zone-zero-ye-shunguang-build-guide.html'
   ].freeze
 
-  OUTPUT_FILE = 'scrapped.json'
+  OUTPUT_FILE = 'scraped.json'
 
   def self.run
     scraped_data = []
@@ -23,7 +25,8 @@ class ScraperRunner
     URLS.each do |url|
       next if url.empty?
 
-      scraper = LootbarMaterialsScraper.new(url)
+      # scraper = LootbarMaterialsScraper.new(url)
+      scraper = LootbarBuilsdScraper.new(url)
       result = scraper.scrape
       scraped_data << result unless result.empty?
     end

@@ -11,10 +11,10 @@ bundle install
 ## Usage
 
 ```bash
-bundle exec ruby static_webscrapper.rb
+bundle exec ruby static_webscraper.rb
 ```
 
 ## TODO
 - [ ] Add Support for Builds and Teams
 - [ ] Add support for database
-- [ ] Add support for dynamic pages and scrapp urls in lootbar.gg
+- [ ] Add support for dynamic pages and scrap urls in lootbar.gg

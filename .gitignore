@@ -1,5 +1,5 @@
 .vscode/
-spec/scrapped.json
-/scrapped.json
+spec/scraped.json
+/scraped.json
 /.bundle
 /vendor/bundle

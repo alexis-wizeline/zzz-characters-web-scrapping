@@ -28,4 +28,12 @@ class LootbarBaseScraper
   def page_tables
     @doc.xpath('//table')
   end
+
+  def map_table(table_node)
+    TableParser.new(table_node).parse
+  end
+
+  def map_tables(all_tables, indexes)
+    indexes.map { |index| map_table(all_tables[index]) }
+  end
 end
