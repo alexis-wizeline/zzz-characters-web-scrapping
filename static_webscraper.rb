@@ -10,11 +10,11 @@ require_relative 'lootbar_scraper/lootbar_builds_scraper'
 
 # The scraper runner
 class ScraperRunner
-  URLS = [
-    # 'https://lootbar.gg/blog/en/zenless-zone-zero-ye-shunguang-materials.html',
-    # 'https://lootbar.gg/blog/en/zenless-zone-zero-dialyn-materials.html',
-    # 'https://lootbar.gg/blog/en/zenless-zone-zero-banyue-materials.html'
-    'https://lootbar.gg/blog/en/zenless-zone-zero-ye-shunguang-build-guide.html'
+  ELEMENTS = [
+    { url: 'https://lootbar.gg/blog/en/zenless-zone-zero-ye-shunguang-materials.html', type: :materials },
+    { url: 'https://lootbar.gg/blog/en/zenless-zone-zero-dialyn-materials.html', type: :materials },
+    { url: 'https://lootbar.gg/blog/en/zenless-zone-zero-banyue-materials.html', type: :materials },
+    { url: 'https://lootbar.gg/blog/en/zenless-zone-zero-ye-shunguang-build-guide.html', type: :builds }
   ].freeze
 
   OUTPUT_FILE = 'scraped.json'
@@ -22,11 +22,18 @@ class ScraperRunner
   def self.run
     scraped_data = []
 
-    URLS.each do |url|
-      next if url.empty?
+    ELEMENTS.each do |element|
+      next if element.empty?
 
-      # scraper = LootbarMaterialsScraper.new(url)
-      scraper = LootbarBuilsdScraper.new(url)
+      url = element[:url]
+      scraper = case element[:type]
+                when :materials
+                  LootbarMaterialsScraper.new(url)
+                when :builds
+                  LootbarBuilsdScraper.new(url)
+                end
+      next if scraper.nil?
+
       result = scraper.scrape
       scraped_data << result unless result.empty?
     end

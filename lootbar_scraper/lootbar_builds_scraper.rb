@@ -27,11 +27,19 @@ class LootbarBuilsdScraper < LootbarBaseScraper
     5 => :with_sub_sections
   }.freeze
 
+  SECTION_H3_INDEXES = {
+    0 => [0, 1],
+    4 => [2, 3],
+    5 => [4, 5, 6]
+  }.freeze
+
+  H3_TABLE_INDEXES = [0, nil, 4, 5, 6, 7, 8].freeze
+
   attr_reader :character_builds
 
   def initialize(url)
     super(url)
-    @character_builds = {}
+    @character_builds = { type: :builds }
   end
 
   def scrape
@@ -47,21 +55,25 @@ class LootbarBuilsdScraper < LootbarBaseScraper
   private
 
   def process_sections
-    paragraph_tables = page_paragraph_tables
     paragraph_sections = page_sub_title_paragraphs
-
-    nodes = {
-      'tables' => paragraph_tables,
+    p_nodes = {
+      'tables' => page_paragraph_tables,
       'p' => paragraph_sections
+    }
+
+    sub_nodes = {
+      'h3' => page_h3_titles,
+      'h2_p' => paragraph_sections,
+      'tables' => page_tables
     }
 
     sub_titles = page_sub_titles.take(page_sub_titles.size - 1) # we don't want the las element
     sub_titles.map.with_index do |sub, i|
       case SECTION_BY_INDEX_TYPE[i]
       when :with_sub_sections
-        { 'title' => sub.content }
+        process_with_sub_sections(sub, i, sub_nodes)
       when :with_paragraph_table
-        process_section_with_paragrap_table(sub, i, nodes)
+        process_section_with_paragrap_table(sub, i, p_nodes)
       end
     end
   end
@@ -78,10 +90,36 @@ class LootbarBuilsdScraper < LootbarBaseScraper
     section['table'] = map_table(table)
 
     paragraph_index = SECTION_PARAGRAPH_INDEXES[index]
-    paragraph = paragraphs[paragraph_index].content.gsub("\u00A0", ' ')
-    section['text'] = paragraph
+    section['text'] = clean_content(paragraphs[paragraph_index])
 
     section
+  end
+
+  def process_with_sub_sections(root, index, nodes)
+    return {} unless root
+
+    h2_p = nodes['h2_p']
+
+    h2_index = SECTION_PARAGRAPH_INDEXES[index]
+
+    sub_sections = SECTION_H3_INDEXES[index].map { |h3_index| h3_sub_section(h3_index, nodes) }
+
+    section = { 'title' => root.content,
+                'sub_sections' => sub_sections }
+
+    section['text'] = clean_content(h2_p[h2_index]) unless h2_index.nil?
+    section
+  end
+
+  def h3_sub_section(index, nodes)
+    h3 = nodes['h3']
+    tables = nodes['tables']
+    h3_table_index = H3_TABLE_INDEXES[index]
+    sub_sec = { 'title' => clean_content(h3[index]) }
+    # only the overview has data so no need to think in an index stuff
+    sub_sec['text'] = page_overview_paragraph unless index != 1
+    sub_sec['table'] = map_table(tables[h3_table_index]) unless h3_table_index.nil?
+    sub_sec
   end
 
   def page_sub_title_paragraphs
@@ -93,5 +131,17 @@ class LootbarBuilsdScraper < LootbarBaseScraper
   # they belong to the sub title indexes [1, 2, 3]
   def page_paragraph_tables
     @doc.css('p + table')
+  end
+
+  def page_h3_titles
+    @doc.xpath('//h3')
+  end
+
+  def page_overview_paragraph
+    clean_content(@doc.at_css('ul + p'))
+  end
+
+  def clean_content(node)
+    node.content.gsub("\u00A0", ' ')
   end
 end

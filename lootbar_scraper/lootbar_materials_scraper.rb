@@ -9,7 +9,7 @@ class LootbarMaterialsScraper < LootbarBaseScraper
 
   def initialize(url)
     super(url)
-    @character_materials = {}
+    @character_materials = { type: :materials }
   end
 
   def scrape
