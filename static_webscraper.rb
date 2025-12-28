@@ -30,7 +30,7 @@ class ScraperRunner
                 when :materials
                   LootbarMaterialsScraper.new(url)
                 when :builds
-                  LootbarBuilsdScraper.new(url)
+                  LootbarBuildsScraper.new(url)
                 end
       next if scraper.nil?
 

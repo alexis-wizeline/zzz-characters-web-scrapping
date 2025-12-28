@@ -83,3 +83,52 @@ RSpec.describe LootbarMaterialsScraper do
     end
   end
 end
+
+RSpec.describe LootbarBuildsScraper do
+  let(:url) { 'https://example.com/builds' }
+  subject { described_class.new(url) }
+
+  before do
+    stub_request(:get, url).to_return(body: <<~HTML)
+      <html>
+        <head><title>Test Page</title></head>
+        <body>
+        <h2>1.- random title 1</h2>
+        <p>p.1 - P for title 1</p>
+        <table><tbody><tr><td>build 1</td></tr></tbody></table>
+        <h2> 2.- random title 2 </h2>
+        <ul><h3> 2.1- random sub for title 2 </h3></ul>
+        <p>overview paragraph</p>
+        <table><tbody><tr><td>build 2</td></tr></tbody></table>
+        <h2> extra node </h2>
+        </body>
+      </html>
+    HTML
+  end
+
+  describe '#scrape' do
+    it 'scrape data correctly' do
+      stub_const('LootbarBuildsScraper::SECTION_BY_INDEX_TYPE', { 0 => :with_paragraph_table, 1 => :with_sub_sections })
+      stub_const('LootbarBuildsScraper::PARAGRAPH_TABLE_SUB_TITLE_INDEXES', { 0 => 0 })
+      stub_const('LootbarBuildsScraper::SECTION_PARAGRAPH_INDEXES', { 0 => 0 })
+      stub_const('LootbarBuildsScraper::SECTION_H3_INDEXES', { 1 => [0] })
+      stub_const('LootbarBuildsScraper::H3_TABLE_INDEXES', [1])
+
+      result = subject.scrape
+
+      expect(result[:type]).to eq(:builds)
+      expect(result['page_name']).to eq('Test Page')
+
+      sections = result['sections']
+      expect(sections).to be_an(Array)
+      expect(sections.size).to eq(2)
+
+      expect(sections[0]['title']).to eq('1.- random title 1')
+      expect(sections[0]['text']).to eq('p.1 - P for title 1')
+
+      expect(sections[1]['title']).to eq(' 2.- random title 2 ')
+      expect(sections[1]['sub_sections']).to be_an(Array)
+      expect(sections[1]['sub_sections'].size).to eq(1)
+    end
+  end
+end

@@ -3,7 +3,7 @@
 require_relative 'lootbar_base_scraper'
 
 # lootbar web scraper for ZZZ characters builds and teams
-class LootbarBuilsdScraper < LootbarBaseScraper
+class LootbarBuildsScraper < LootbarBaseScraper
   PARAGRAPH_TABLE_SUB_TITLE_INDEXES = {
     1 => 0,
     2 => 1,
